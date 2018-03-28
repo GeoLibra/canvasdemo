@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas clock</title>
+</head>
+<body>
+<canvas id="draw" width="600" height="600"></canvas>
+</body>
+</html>
+<script>
+    var draw=document.getElementById('draw');
+    var ctx=draw.getContext('2d');
+    var width=ctx.canvas.width;
+    var height=ctx.canvas.height;
+    var r=width/2;
+    var rem=width/200;  //定义缩放比例
+    function drawback(){
+
+        ctx.save();
+        ctx.translate(r,r);
+        ctx.beginPath();
+        ctx.lineWidth=5*rem;
+        ctx.arc(0,0,r-5*rem,0,Math.PI*2);
+        ctx.stroke();
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.font=20*rem+'px Arial';
+        //绘制外圆
+        for(var i=1;i<13;i++){
+            var rad=-Math.PI/2+i*2*Math.PI/12;
+            var x=(r-25*rem)*Math.cos(rad);
+            var y=(r-25*rem)*Math.sin(rad);
+
+            ctx.fillText(i.toString(),x,y);
+        }
+        //绘制数字及半径
+        for(var i=1;i<=60;i++){
+            var rad=-Math.PI/2+i*2*Math.PI/60;
+            var x=(r-12*rem)*Math.cos(rad);
+            var y=(r-12*rem)*Math.sin(rad);
+            ctx.beginPath();
+            var pr=0;  //点的半径
+            if(i%5===0){
+                pr=4;
+                ctx.fillStyle='red';
+            }else{
+                pr=2;
+                ctx.fillStyle='#000';
+            }
+            ctx.arc(x,y,pr*rem,0,2*Math.PI);
+            ctx.fill();
+        }
+
+    }
+    //绘制时针
+    function drawHour(hour,minute) {
+        ctx.beginPath();
+        ctx.save();  //保存当前环境状态
+
+        var rad=hour*2*Math.PI/12;
+        var mrad=2*Math.PI/12/60*minute;
+        ctx.rotate(rad+mrad);  //旋转当前绘图
+        ctx.moveTo(0,10);
+        ctx.lineCap='round';
+        ctx.lineWidth=5*rem;
+        ctx.lineTo(0,-r/2);
+        ctx.stroke();
+        ctx.restore();//返回之前保存过的路径状态和属性
+    }
+    //绘制分针
+    function drawMinute(minute) {
+        ctx.beginPath();
+        ctx.save();
+
+        var rad=minute*2*Math.PI/60;
+        ctx.rotate(rad);
+        ctx.moveTo(0,10);
+        ctx.lineCap='round';
+        ctx.lineWidth=3*rem;
+        ctx.lineTo(0,-r/2-5*rem);
+        ctx.stroke();
+        ctx.restore();
+    }
+    //绘制秒针
+    function drawSecond(second) {
+        ctx.beginPath();
+        ctx.save();
+
+        var rad=second*2*Math.PI/60;
+        ctx.rotate(rad);
+        ctx.moveTo(0,10*rem);
+        ctx.lineCap='round';
+        ctx.lineWidth=2*rem;
+        ctx.strokeStyle='red';
+        ctx.lineTo(0,-r/2-10*rem);
+        ctx.stroke();
+        ctx.restore();
+    }
+    function drawCenterPoint(){
+        ctx.beginPath();
+        ctx.arc(0,0,2*rem,0,Math.PI*2);
+        ctx.fillStyle='#fff';
+        ctx.fill();
+    }
+
+    function drawClock(){
+        ctx.clearRect(0,0,width,height);
+
+        drawback();
+        drawCenterPoint();
+
+        var now=new Date();
+        var hour=now.getHours();
+        var minute=now.getMinutes();
+        var seconds=now.getSeconds();
+        drawHour(hour,minute);
+        drawMinute(minute);
+        drawSecond(seconds);
+        ctx.restore();
+
+    }
+    setInterval(drawClock,1000);
+</script>
