@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tangram</title>
+    <style>
+        html,body{
+            margin: 0 auto;
+        }
+        #draw{
+            display: block;
+            margin: 0 auto;
+            border: solid 1px #000;
+        }
+        div{
+            margin: 0 auto;
+            width: 100%;
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <canvas id="draw" >
+        当前浏览器不支持canvas
+    </canvas>
+</div>
+
+</body>
+</html>
+<script>
+    var tangram = [
+        {
+            polygon: [{x: 0, y: 0}, {x: 800, y: 0}, {x: 400, y: 400}],
+            color: '#caff67',
+            click:false,
+            drag:false,
+            type:3
+        },
+        {
+            polygon: [{x: 0, y: 0}, {x: 400, y: 400}, {x: 0, y: 800}],
+            color: '#67becf',
+            click:false,
+            drag:false,
+            type:3
+        },
+        {
+            polygon: [{x: 800, y: 0}, {x: 800, y: 400}, {x: 600, y: 600}, {x: 600, y: 200}],
+            color: '#ef3d61',
+            click:false,
+            drag:false,
+            type:4
+        },
+        {
+            polygon: [{x: 600, y: 200}, {x: 600, y: 600}, {x: 400, y: 400}],
+            color: '#f9f51a',
+            click:false,
+            drag:false,
+            type:4
+        },
+        {
+            polygon: [{x: 400, y: 400}, {x: 600, y: 600}, {x: 400, y: 800}, {x: 200, y: 600}],
+            color: '#a594c0',
+            click:false,
+            drag:false,
+            type:4
+        },
+        {
+            polygon: [{x: 200, y: 600}, {x: 400, y: 800}, {x: 0, y: 800}],
+            color: '#fa8ecc',
+            click:false,
+            drag:false,
+            type:3
+        },
+        {
+            polygon: [{x: 800, y: 400}, {x: 800, y: 800}, {x: 400, y: 800}],
+            color: '#50ff42',
+            click:false,
+            drag:false,
+            type:3
+        },
+    ];
+    var canvas=document.getElementById('draw');
+    canvas.onmousedown=clickTangram;
+    canvas.onmousemove=dragTangram;
+    canvas.onmouseout=stopDrag;
+    canvas.onmouseup=stopDrag;
+    canvas.ondblclick=dbClick;
+    canvas.width=800;
+    canvas.height=800;
+    var width=canvas.width;
+    var height=canvas.height;
+    var rem=width/800;  //定义缩放比例
+    var ctx=canvas.getContext('2d');
+    drawing();
+    function drawing() {
+        ctx.clearRect(0,0,width,height);
+        tangram.forEach(function (item,index) {
+            ctx.save();
+            ctx.beginPath();
+            if(item.click){
+
+                ctx.translate(item.polygon[0].x*rem,item.polygon[0].y*rem);
+                ctx.rotate(Math.PI/4);
+
+                item.click=false;
+            }
+            ctx.translate(0,0);
+            ctx.moveTo(item.polygon[0].x*rem,item.polygon[0].y*rem);
+            for(var i=1;i<item.polygon.length;i++){
+                ctx.lineTo(item.polygon[i].x*rem,item.polygon[i].y*rem);
+            }
+            ctx.closePath();
+            ctx.fillStyle=item.color;
+            ctx.fill();
+            ctx.restore();
+        });
+    }
+    function clickTangram() {
+        
+    }
+    function dragTangram() {
+        
+    }
+    function stopDrag() {
+        
+    }
+    //双击旋转45度
+    function dbClick(e) {
+        var ex = e.pageX - canvas.offsetLeft;
+        var ey = e.pageY - canvas.offsetTop;
+
+        for(var i=0;i<tangram.length;i++){
+
+            ctx.beginPath();
+            ctx.moveTo(tangram[i].polygon[0].x*rem,tangram[i].polygon[0].y*rem);
+            for(var j=1;j<tangram[i].polygon.length;j++){
+                ctx.lineTo(tangram[i].polygon[j].x*rem,tangram[i].polygon[j].y*rem);
+            }
+            ctx.closePath();
+            if(ctx.isPointInPath(ex,ey)){
+
+                tangram[i].click=true;
+                var item=tangram[i];
+                tangram.splice(i,1);
+                tangram.push(item);
+                drawing();
+                break;
+            }
+
+        }
+
+    }
+</script>
