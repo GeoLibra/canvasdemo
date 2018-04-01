@@ -15,12 +15,16 @@ window.onload=function () {
     draw.width=WINDOW_WIDTH;
     draw.height=WINDOW_HEIGHT;
     curTimeSeconds=getCurTimeSeconds();
-    render(ctx);
+    setInterval(function () {
+        render(ctx);
+        update();
+    },50);
 }
 function getCurTimeSeconds() {
     return Math.round((end_time.getTime()-new Date().getTime())/1000);
 }
 function render(ctx){
+    ctx.clearRect(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
     var hours=parseInt(curTimeSeconds/3600);
     var minutes=parseInt((curTimeSeconds-3600*hours)/60);
     var seconds=curTimeSeconds%60;
@@ -48,5 +52,11 @@ function renderDigit(x,y,num,ctx){
                 ctx.closePath();
             }
         }
+    }
+}
+function update() {
+    var nexTimeSeconds=getCurTimeSeconds();
+    if(nexTimeSeconds!=curTimeSeconds){
+        curTimeSeconds=nexTimeSeconds;
     }
 }
