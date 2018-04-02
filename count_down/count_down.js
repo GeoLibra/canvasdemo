@@ -1,19 +1,28 @@
-var WINDOW_WIDTH=1024;
-var WINDOW_HEIGHT=768;
-var RADIUS=7;
+var WINDOW_WIDTH;
+var WINDOW_HEIGHT;
+var RADIUS=0;
 
 var MARGIN_LEFT=0;
 var MARGIN_TOP=0;
 
-var end_time=new Date(2018,3,2,12,38,0);
+// var end_time=new Date();
+// end_time.setTime(end_time.getTime()+3600*1000);   //距离当前时间的后一个小时
 var curTimeSeconds=0;
 
 var balls=[];
 const colors=["#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"];
 
-var num_width=(digit[0][0].length+1)*2*(RADIUS+1);
-var colon_width=(digit[10][0].length+1)*2*(RADIUS+1);
+var num_width;
+var colon_width;
 window.onload=function () {
+    WINDOW_WIDTH=document.body.clientWidth;
+    WINDOW_HEIGHT=document.body.clientHeight;
+    // MARGIN_LEFT=Math.round(WINDOW_WIDTH/10);
+    // MARGIN_TOP=Math.round(WINDOW_HEIGHT/5);
+    RADIUS=Math.round(WINDOW_WIDTH*4/5/108)-1;
+    num_width=(digit[0][0].length+1)*2*(RADIUS+1);
+    colon_width=(digit[10][0].length+1)*2*(RADIUS+1);
+
     var draw=document.getElementById('draw');
     var ctx=draw.getContext('2d');
 
@@ -24,10 +33,15 @@ window.onload=function () {
     setInterval(function () {
         render(ctx);
         update();
+
     },50);
 }
 function getCurTimeSeconds() {
-    return Math.round((end_time.getTime()-new Date().getTime())/1000);
+    var curTime=new Date();
+    // var time=Math.round((end_time.getTime()-new Date().getTime())/1000);
+    // return time>=0?time:0;
+
+    return curTime.getHours()*3600+curTime.getMinutes()*60+curTime.getSeconds();
 }
 function render(ctx){
     ctx.clearRect(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
@@ -69,7 +83,6 @@ function renderDigit(x,y,num,ctx){
     }
 }
 function update() {
-
 
     var nexTimeSeconds=getCurTimeSeconds();
 
@@ -127,6 +140,9 @@ function addBalls(x,y,num) {
             balls[cnt++]=balls[i];
         }
     }
+    while (balls.length>cnt){
+        balls.pop();
+    }
     
 }
 function updateBalls() {
@@ -134,7 +150,7 @@ function updateBalls() {
         balls[i].x+=balls[i].vx;
         balls[i].y+=balls[i].vy;
         balls[i].vy+=balls[i].g;
-        if(balls[i]>=WINDOW_HEIGHT-RADIUS){
+        if(balls[i].y>=WINDOW_HEIGHT-RADIUS){
             balls[i].y=WINDOW_HEIGHT-RADIUS;
             balls[i].vy=-balls[i].vy*0.75;
         }
