@@ -56,7 +56,7 @@ function render(ctx){
     }
 }
 function renderDigit(x,y,num,ctx){
-    ctx.fillStyle='#56a36c';
+    ctx.fillStyle='#f17c67';
     for(var i=0;i<digit[num].length;i++){
         for(var j=0;j<digit[num][i].length;j++){
             if(digit[num][i][j]===1){
@@ -121,6 +121,13 @@ function addBalls(x,y,num) {
             }
         }
     }
+    var cnt=0;  //记录保留的小球个数
+    for(var i=0;i<balls.length;i++){
+        if(balls[i].x+RADIUS>0&&balls[i].x-RADIUS<WINDOW_WIDTH){
+            balls[cnt++]=balls[i];
+        }
+    }
+    
 }
 function updateBalls() {
     for(var i=0;i<balls.length;i++){
