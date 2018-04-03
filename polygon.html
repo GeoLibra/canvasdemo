@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>多边形</title>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500"></canvas>
+</body>
+</html>
+<script>
+    var canvas=document.getElementById('canvas');
+    var ctx=canvas.getContext('2d');
+
+    var Point=function (x,y) {
+        this.x=x;
+        this.y=y;
+    }
+    /**
+     *
+     * @param ctx
+     * @param x
+     * @param y  多边形中心坐标
+     * @param radius  半径
+     * @param num     几边形
+     * @param startAngle 起始角度
+     * @param strokeStyle
+     * @param fillStyle
+     * @constructor
+     */
+    var Polygon=function (ctx,x,y,radius,num,startAngle,strokeStyle,fillStyle) {
+        this.x=x;
+        this.y=y;
+        this.radius=radius;
+        this.num=num;
+        this.startAngle=startAngle;
+        this.strokeStyle=strokeStyle;
+        this.fillStyle=fillStyle;
+        this.ctx=ctx;
+    }
+    //计算多边形定点
+    Polygon.prototype.getPoints=function () {
+        var points=[];
+        var angle=this.startAngle||0;
+        for(var i=0;i<this.num;i++){
+            var point=new Point();
+            point.x=this.x+this.radius*Math.cos(angle*Math.PI/180);
+            point.y=this.y-this.radius*Math.sin(angle*Math.PI/180);
+            points.push(
+                point
+            );
+            angle+=360/this.num;
+        }
+        return points;
+    }
+    Polygon.prototype.createPath=function () {
+        var points=this.getPoints();
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(points[0].x,points[0].y);
+        for (var i=1;i<points.length;i++){
+            this.ctx.lineTo(points[i].x,points[i].y);
+        }
+
+        this.ctx.closePath();
+    }
+    Polygon.prototype.strokePolygon=function () {
+        this.ctx.strokeStyle=this.strokeStyle;
+        this.createPath();
+        this.ctx.stroke();
+    }
+    Polygon.prototype.fillPolygon=function () {
+        this.ctx.fillStyle=this.fillStyle;
+        this.createPath();
+        this.ctx.fill();
+    }
+    var p1=new Polygon(ctx,50,50,50,5,0,"green");
+    p1.strokePolygon();
+
+    var p2=new Polygon(ctx,150,150,50,4,45,"blue","red");
+    p2.strokePolygon();
+    p2.fillPolygon();
+</script>

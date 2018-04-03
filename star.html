@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>五角星</title>
+<style>
+
+</style>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" ></canvas>
+</body>
+</html>
+<script>
+    window.onload=function () {
+        var canvas=document.getElementById('canvas');
+        var ctx=canvas.getContext('2d');
+
+        ctx.lineCap='round';
+        ctx.lineJoin='round';
+        const colors=["#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"];
+        for(var i=0;i<200;i++){
+            var r=Math.random()*10+10;
+            var x=Math.random()*(canvas.width-2*r)+r;
+            var y=Math.random()*(canvas.height-2*r)+r;
+            var rot=Math.random()*360;
+            ctx.fillStyle=colors[Math.floor(Math.random()*colors.length)];
+            drawStar(ctx,x,y,r,r/2,rot);
+        }
+
+
+    }
+    /**
+     *
+     * @param ctx
+     * @param x
+     * @param y
+     * @param outerR
+     * @param innerR
+     * @param rot  旋转参数
+     */
+    function drawStar(ctx,x,y,outerR,innerR,rot) {
+        ctx.beginPath();
+        for(var i=0;i<5;i++){
+            ctx.lineTo(Math.cos((18+i*72-rot)/180*Math.PI)*outerR+x,
+                -Math.sin((18+i*72-rot)/180*Math.PI)*outerR+y
+            );
+            ctx.lineTo(Math.cos((54+i*72-rot)/180*Math.PI)*innerR+x,
+                -Math.sin((54+i*72-rot)/180*Math.PI)*innerR+y
+            );
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+</script>
+
+

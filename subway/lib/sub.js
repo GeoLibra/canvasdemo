@@ -49,9 +49,10 @@ function clickSubway(e) {
 function dragSubway(e) {
     end_x=e.pageX-draw.offsetLeft;
     end_y=e.pageY-draw.offsetTop;
-    mx=end_x-start_x;
-    my=end_y-start_y;
+
     if(isDrag){
+        mx=end_x-start_x;
+        my=end_y-start_y;
         drawSubway();
     }
 
@@ -61,7 +62,6 @@ function stopDrag(e) {
     isDrag=false;
     e.stopPropagation();
     e.preventDefault();
-
 }
 function scaleSubway(e) {
     if(e.wheelDelta<0){  //缩小
@@ -74,24 +74,23 @@ function scaleSubway(e) {
 function drawSubway() {
     ctx.clearRect(0,0,draw.width,draw.height);
     var rs={};
-
+    ctx.save();
+    ctx.translate(mx,my);
     lines.forEach(function (item,index) {
         var points=item.c;  //线路
 
         ctx.beginPath();
-
-//            ctx.strokeStyle=colors[Math.floor(Math.random()*colors.length)];
         ctx.strokeStyle=colors[index];
         ctx.lineWidth=5;
         ctx.lineJoin='round';
         ctx.lineCap='round';
         var x=parseInt(points[0].split(' ')[0]);
         var y=parseInt(points[0].split(' ')[1]);
-        ctx.moveTo(x+mx,y+my);
+        ctx.moveTo(x,y);
         for(var i=1;i<points.length;i++){
             x=parseInt(points[i].split(' ')[0]);
             y=parseInt(points[i].split(' ')[1]);
-            ctx.lineTo(x+mx,y+my);
+            ctx.lineTo(x,y);
 //                    ctx.arc(points[i].split(' ')[0],points[i].split(' ')[1],2,0,Math.PI*2);
         }
         ctx.stroke();
@@ -110,16 +109,16 @@ function drawSubway() {
                 ctx.beginPath();
                 if(station.t==='1'){
                     //换乘站
-                    ctx.arc(x+mx,y+my,station_r*2,0,2*Math.PI);
+                    ctx.arc(x,y,station_r*2,0,2*Math.PI);
                 }else{
-                    ctx.arc(x+mx,y+my,station_r,0,2*Math.PI);
+                    ctx.arc(x,y,station_r,0,2*Math.PI);
                 }
                 ctx.stroke();
                 ctx.fill();
                 ctx.textAlign='start';
                 ctx.textBaseline='hanging';
                 ctx.fillStyle='#000';
-                ctx.fillText(station.n,x+5+mx,y+5+my);
+                ctx.fillText(station.n,x+5,y+5);
                 ctx.closePath();
                 rs[station.poiid]='';
             }
@@ -127,4 +126,5 @@ function drawSubway() {
         });
 
     });
+    ctx.restore();
 }
