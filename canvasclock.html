@@ -61,11 +61,11 @@
         var mrad=2*Math.PI/12/60*minute;
         ctx.rotate(rad+mrad);  //旋转当前绘图
         ctx.moveTo(0,10);
-//        ctx.lineCap='round';
-//        ctx.lineWidth=5*rem;
-//        ctx.lineTo(0,-r/2);
-        ctx.bezierCurveTo(20, -10, 20, -60, 0, -r/2);
-        ctx.bezierCurveTo(-20, -60, -20, -10, 0, 10);
+        ctx.lineCap='round';
+        ctx.lineWidth=4*rem;
+        ctx.lineTo(0,-r/2+5*rem);
+//        ctx.bezierCurveTo(20, -10, 20, -60, 0, -r/2);
+//        ctx.bezierCurveTo(-20, -60, -20, -10, 0, 10);
         ctx.fill();
         ctx.stroke();
         ctx.restore();//返回之前保存过的路径状态和属性
