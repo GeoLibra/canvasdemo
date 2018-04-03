@@ -24,7 +24,11 @@ var scale=1;
 var mx=end_x-start_x;
 var my=end_y-start_y;
 draw.width=1300;
-draw.height=900;
+draw.height=800;
+var maxScale=4.0;      // 最大放大倍数
+var minScale=0.1;       // 最小放大倍数
+var step=0.1;          // 每次放大、缩小 倍数的变化值
+
 var ctx=draw.getContext('2d');
 //读取本地数据
 var xhr=new XMLHttpRequest();
@@ -70,11 +74,16 @@ function stopDrag(e) {
     e.preventDefault();
 }
 function scaleSubway(e) {
+    scale=1;
     if(e.wheelDelta<0){  //缩小
-        scale*=0.5;
+        scale =scale <= minScale? minScale : scale - step;
     }else{
-        scale*=2;
+        scale = draw.scale >= maxScale? maxScale : scale + step;
     }
+
+    ctx.scale(scale,scale);
+    drawSubway();
+
 }
 function drawSubway() {
     ctx.save();
