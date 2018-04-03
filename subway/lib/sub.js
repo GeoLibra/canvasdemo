@@ -36,25 +36,31 @@ xhr.onreadystatechange=function () {
     if(xhr.readyState==4&&xhr.status==200){
         var result=JSON.parse(xhr.responseText);
         lines=result.l;
+
         drawSubway();
+
     }
 };
 
 function clickSubway(e) {
     isDrag=true;
-    start_x=e.pageX-draw.offsetLeft;
-    start_y=e.pageY-draw.offsetTop;
+    start_x=e.offsetX;
+    start_y=e.offsetY;
 
 }
 function dragSubway(e) {
-    end_x=e.pageX-draw.offsetLeft;
-    end_y=e.pageY-draw.offsetTop;
+    end_x=e.offsetX;
+    end_y=e.offsetY;
 
     if(isDrag){
         mx=end_x-start_x;
         my=end_y-start_y;
+
         drawSubway();
+
     }
+    start_x=end_x;
+    start_y=end_y;
 
 }
 
@@ -69,12 +75,14 @@ function scaleSubway(e) {
     }else{
         scale*=2;
     }
-
 }
 function drawSubway() {
-    ctx.clearRect(0,0,draw.width,draw.height);
-    var rs={};
     ctx.save();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0,0,draw.width,draw.height);
+    ctx.restore();
+    var rs={};
+    // ctx.save();
     ctx.translate(mx,my);
     lines.forEach(function (item,index) {
         var points=item.c;  //线路
@@ -126,5 +134,5 @@ function drawSubway() {
         });
 
     });
-    ctx.restore();
+    // ctx.restore();
 }
