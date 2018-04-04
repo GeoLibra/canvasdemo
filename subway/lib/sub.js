@@ -80,14 +80,16 @@ function scaleSubway(e) {
     }else{
         scale = draw.scale >= maxScale? maxScale : scale + step;
     }
-
+    // ctx.save();
+    // ctx.translate(e.offsetX,e.offsetY);
     ctx.scale(scale,scale);
+
     drawSubway();
 
 }
 function drawSubway() {
     ctx.save();
-    ctx.setTransform(1,0,0,1,0,0);
+    ctx.setTransform(1,0,0,1,0,0);  //忽略前面的变换
     ctx.clearRect(0,0,draw.width,draw.height);
     ctx.restore();
     var rs={};
