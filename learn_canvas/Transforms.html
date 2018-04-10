@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+</html>
+<script>
+    /**
+     *  a(水平缩放) c(垂直倾斜) e(水平位移)
+     *  b(水平倾斜) d(垂直缩放) f(垂直位移)
+     *  0          0          1
+     *  transform(a,b,c,d,e,f)
+     */
+    var canvas=document.getElementById('canvas');
+    canvas.width=500;
+    canvas.height=500;
+    var ctx=canvas.getContext('2d');
+
+    var sin=Math.sin(Math.PI/6);
+    var cos=Math.cos(Math.PI/6);
+
+    ctx.translate(100,100);
+    var c=0;
+    for(var i=0;i<=12;i++){
+        c=Math.floor(255/12*i);
+        ctx.fillStyle='rgb('+c+','+c+','+c+')';
+        ctx.fillRect(0,0,100,10);
+        ctx.transform(cos,sin,-sin,cos,0,0);
+    }
+    ctx.fillStyle='red';
+    ctx.fillRect(0,0,100,100);
+    ctx.setTransform(-1,0,0,1,100,100);
+    ctx.fillStyle='rgba(255,128,255,0.5)';
+    ctx.fillRect(0,0,100,100);
+</script>

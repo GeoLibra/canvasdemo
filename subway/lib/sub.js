@@ -25,9 +25,9 @@ var mx=end_x-start_x;
 var my=end_y-start_y;
 draw.width=1300;
 draw.height=800;
-var maxScale=4.0;      // 最大放大倍数
-var minScale=0.1;       // 最小放大倍数
-var step=0.1;          // 每次放大、缩小 倍数的变化值
+var maxScale=1.5;      // 最大放大倍数
+var minScale=0.5;       // 最小放大倍数
+var step=0.8;          // 每次放大、缩小 倍数的变化值
 
 var ctx=draw.getContext('2d');
 //读取本地数据
@@ -40,7 +40,6 @@ xhr.onreadystatechange=function () {
     if(xhr.readyState==4&&xhr.status==200){
         var result=JSON.parse(xhr.responseText);
         lines=result.l;
-
         drawSubway();
 
     }
@@ -74,17 +73,20 @@ function stopDrag(e) {
     e.preventDefault();
 }
 function scaleSubway(e) {
-    scale=1;
-    if(e.wheelDelta<0){  //缩小
-        scale =scale <= minScale? minScale : scale - step;
-    }else{
-        scale = draw.scale >= maxScale? maxScale : scale + step;
-    }
-    // ctx.save();
-    // ctx.translate(e.offsetX,e.offsetY);
-    ctx.scale(scale,scale);
 
-    drawSubway();
+    // if(e.wheelDelta<0&&scale>=minScale){  //缩小
+    //     scale =scale - step;
+    //     ctx.scale(scale,scale);
+    //     drawSubway();
+    //
+    //
+    // }
+    // if(e.wheelDelta>0&&scale<=maxScale){
+    //     scale = scale + step;
+    //     ctx.scale(scale,scale);
+    //     drawSubway();
+    //
+    // }
 
 }
 function drawSubway() {

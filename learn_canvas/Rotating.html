@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html,body{
+            height:100%;
+            overflow: hidden;
+        }
+        body{
+            margin:0;
+            padding:0;
+        }
+        .stage{
+            /*width:100%;*/
+            /*height:100%;*/
+            border:1px solid #e74c3c;
+        }
+    </style>
+</head>
+<body>
+<canvas class="stage" id="mystage" width="500" height="500"/>
+</body>
+</html>
+<script>
+    var cvs=document.getElementById("mystage");
+    var ctx=cvs.getContext("2d");
+    draw();
+
+    function draw() {
+        ctx.translate(150,150);
+        for (var i=0;i<6;i++){
+            ctx.save();
+            ctx.fillStyle='rgba('+(57*i)+','+(255-51*i)+',255)';
+            for(var j=0;j<i*6;j++){
+                //以原点为中心旋转canvas
+                ctx.rotate(Math.PI*2/(i*6));
+                ctx.beginPath();
+                ctx.arc(0,i*12.5,5,0,Math.PI*2,true);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+    }
+
+</script>
