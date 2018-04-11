@@ -25,7 +25,7 @@ var mx=end_x-start_x;
 var my=end_y-start_y;
 draw.width=1300;
 draw.height=800;
-var maxScale=2;      // 最大放大倍数
+var maxScale=5;      // 最大放大倍数
 var minScale=0.5;       // 最小放大倍数
 var step=0.1;          // 每次放大、缩小 倍数的变化值
 
@@ -41,7 +41,6 @@ xhr.onreadystatechange=function () {
         var result=JSON.parse(xhr.responseText);
         lines=result.l;
         drawSubway();
-
     }
 };
 
@@ -76,6 +75,7 @@ function scaleSubway(e) {
     var x=e.offsetX;
     var y=e.offsetY;
     if(e.wheelDelta<0&&scale>=minScale){  //缩小
+        ctx.restore();
         ctx.save();
 
         scale =scale - step;
@@ -84,17 +84,18 @@ function scaleSubway(e) {
 
         ctx.translate(x/scale-x,y/scale-y);
         drawSubway();
-        ctx.restore();
+        // ctx.restore();
 
     }
     if(e.wheelDelta>0&&scale<=maxScale){
+        ctx.restore();
         ctx.save();
 
         scale = scale + step;
         ctx.scale(scale,scale);
         ctx.translate(x/scale-x,y/scale-y);
         drawSubway();
-        ctx.restore();
+        // ctx.restore();
     }
 }
 function drawSubway() {
