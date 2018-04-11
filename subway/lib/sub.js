@@ -25,9 +25,9 @@ var mx=end_x-start_x;
 var my=end_y-start_y;
 draw.width=1300;
 draw.height=800;
-var maxScale=1.5;      // 最大放大倍数
+var maxScale=2;      // 最大放大倍数
 var minScale=0.5;       // 最小放大倍数
-var step=0.8;          // 每次放大、缩小 倍数的变化值
+var step=0.1;          // 每次放大、缩小 倍数的变化值
 
 var ctx=draw.getContext('2d');
 //读取本地数据
@@ -73,21 +73,29 @@ function stopDrag(e) {
     e.preventDefault();
 }
 function scaleSubway(e) {
+    var x=e.offsetX;
+    var y=e.offsetY;
+    if(e.wheelDelta<0&&scale>=minScale){  //缩小
+        ctx.save();
 
-    // if(e.wheelDelta<0&&scale>=minScale){  //缩小
-    //     scale =scale - step;
-    //     ctx.scale(scale,scale);
-    //     drawSubway();
-    //
-    //
-    // }
-    // if(e.wheelDelta>0&&scale<=maxScale){
-    //     scale = scale + step;
-    //     ctx.scale(scale,scale);
-    //     drawSubway();
-    //
-    // }
+        scale =scale - step;
 
+        ctx.scale(scale,scale);
+
+        ctx.translate(x/scale-x,y/scale-y);
+        drawSubway();
+        ctx.restore();
+
+    }
+    if(e.wheelDelta>0&&scale<=maxScale){
+        ctx.save();
+
+        scale = scale + step;
+        ctx.scale(scale,scale);
+        ctx.translate(x/scale-x,y/scale-y);
+        drawSubway();
+        ctx.restore();
+    }
 }
 function drawSubway() {
     ctx.save();
