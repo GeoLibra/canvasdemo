@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas" width="600" height="500" style="border: solid 1px blue"></canvas>
+</body>
+</html>
+<script>
+    var canvas=document.getElementById("canvas");
+    var ctx=canvas.getContext("2d");
+    var raf;
+    var running=false;
+    var ball={
+        x:100,
+        y:100,
+        vx:8,
+        vy:2,
+        g:0.98,
+        radius:25,
+
+        color:'blue',
+        draw:function () {
+            ctx.beginPath();
+            ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
+            ctx.closePath();
+            ctx.fillStyle=this.color;
+            ctx.fill();
+        }
+    };
+    function clear() {
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(0,0,canvas.width,canvas.height); //添加长尾效果
+    }
+    function draw() {
+        clear();
+//        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ball.draw();
+        ball.x+=ball.vx;
+        ball.y+=ball.vy;
+        //添加加速度
+        ball.vy+=ball.g;
+
+        //碰撞检测
+        if(ball.y+ball.vy+ball.radius>canvas.height||ball.y+ball.vy-ball.radius<0){
+            ball.vy=-ball.vy*0.8;  //0.8为阻力
+        }
+        if(ball.x+ball.vx+ball.radius>canvas.width||ball.x+ball.vx-ball.radius<0){
+            ball.vx=-ball.vx*0.9;
+        }
+
+        raf=window.requestAnimationFrame(draw);
+    }
+    canvas.addEventListener('mousemove',function (e) {
+        if(!running){
+            clear();
+
+            ball.x=e.clientX;
+            ball.y=e.clientY;
+            ball.draw();
+        }
+
+    });
+    canvas.addEventListener('click',function (e) {
+        if(!running){
+            raf=window.requestAnimationFrame(draw);
+            running=true;
+        }
+    });
+    canvas.addEventListener('mouseout',function (e) {
+        window.cancelAnimationFrame(raf);
+        running=false;
+    });
+    ball.draw();
+</script>
