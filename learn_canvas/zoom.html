@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>缩放和反锯齿</title>
+    <style>
+        canvas{
+            border: solid 1px green;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<canvas id="zoom"></canvas>
+<input type="checkbox" name="smoothbtn" checked="checked" id="smoothbtn">
+  Enable image smoothing
+</label>
+</body>
+</html>
+<script>
+    let canvas=document.getElementById('canvas');
+    let ctx=canvas.getContext('2d');
+    let zoomele=document.getElementById('zoom');
+    let zoomctx=zoomele.getContext('2d');
+    let smoothbtn=document.getElementById('smoothbtn');
+
+    let img=new Image();
+    img.setAttribute('crossorigin','anonymouse');
+    img.src = 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3161109198,822869356&fm=27&gp=0.jpg';
+    img.onload=()=>{
+        canvas.width=img.width;
+        canvas.height=img.height;
+        zoomele.width=img.width;
+        zoomele.height=img.height;
+        draw();
+    }
+    let draw=()=>{
+        ctx.drawImage(img,0,0);
+        smoothbtn.addEventListener('change',toggleSmoothing);
+        canvas.addEventListener('mousemove',zoom);
+    }
+    let toggleSmoothing=(e)=>{
+        zoomctx.imageSmoothingEnabled=this.checked;
+    }
+    let zoom=(e)=>{
+        let x=e.offsetX;
+        let y=e.offsetY;
+        zoomctx.drawImage(canvas,Math.abs(x-5),Math.abs(y-5),10,10,0,0,100,100);
+    }
+
+
+</script>

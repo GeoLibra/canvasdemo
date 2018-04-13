@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            width: 50px;
+            height: 50px;
+            border: solid 1px blue;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="draw"></canvas>
+<button id="invertbtn">反向颜色</button>
+<button id="grayscalebtn">灰度变换</button>
+</body>
+</html>
+<script>
+    var canvas=document.getElementById("draw");
+    var ctx=canvas.getContext('2d');
+
+    var img=new Image();
+    img.setAttribute('crossorigin','anonymouse');
+    img.src = 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3161109198,822869356&fm=27&gp=0.jpg';
+    img.onload=function () {
+        draw(this);
+    };
+    canvas.width=img.width;
+    canvas.height=img.height;
+    function draw() {
+        ctx.drawImage(img,0,0);
+        img.style.display='none';
+        var imgData=ctx.getImageData(0,0,canvas.width,canvas.height);
+        var data=imgData.data;
+
+        var invert=function () {
+            for (var i=0;i<data.length;i+=4){
+                data[i]=255-data[i];
+                data[i+1]=255-data[i+1];
+                data[i+2]=255-data[i+2];
+            }
+            ctx.putImageData(imgData,0,0);
+        }
+        var grayscale=function () {
+            for (var i=0;i<data.length;i+=4){
+                var avg=(data[i]+data[i+1]+data[i+2])/3;
+                data[i]=avg;
+                data[i+1]=avg;
+                data[i+2]=avg;
+            }
+            ctx.putImageData(imgData,0,0);
+        }
+        var invertbtn=document.getElementById('invertbtn');
+        invertbtn.addEventListener('click', invert);
+        var grayscalebtn = document.getElementById('grayscalebtn');
+        grayscalebtn.addEventListener('click', grayscale);
+    }
+</script>
