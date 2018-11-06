@@ -18,3 +18,5 @@ p2.fillPolygon();
 ![avatar](./img/time.png)
 ### 地铁  
 ![avatar](./img/subway.png)
+### [热力图](https://luvjia.github.io/canvasdemo/heatmap.html)
+![avatar](./img/heatmap.png)
