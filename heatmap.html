@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    let heatData=[];
+    let maxW=0,
+        minW=999;
+    for(let i=0;i<1000;i++){
+        let w=Math.random()*100;
+        if(maxW<w){
+            maxW=w
+        }
+        if(minW>w){
+            minW=w
+        }
+        heatData.push([
+            Math.random()*500,
+            Math.random()*500,
+            w
+        ]);
+    }
+    let canvas=document.createElement('canvas');
+    canvas.width=500;
+    canvas.height=500;
+    document.body.appendChild(canvas);
+    let ctx=canvas.getContext('2d');
+    let radius=15;
+    //设置填充样式
+    ctx.fillStyle='rgba(255,30,0,0.1)';
+    for(let i=0;i<heatData.length;i++){
+        let x=heatData[i][0],
+            y=heatData[i][1],
+            w=heatData[i][2];
+        //创建一个由黑到白的渐变圆
+        ctx.beginPath();
+        //设置globalAlpha
+        let alpha=(w-minW)/(maxW-minW);
+//        alpha=alpha>1?1:alpha;
+        ctx.globalAlpha=alpha;
+        ctx.arc(x,y,radius,0,2*Math.PI,true);
+        //创建一个径向渐变
+        let gradient=ctx.createRadialGradient(x,y,0,x,y,radius);
+        gradient.addColorStop(0,'rgba(0,0,0,1)');
+        gradient.addColorStop(1,'rgba(0,0,0,0)');
+
+        ctx.fillStyle=gradient;
+        ctx.fill();
+        ctx.closePath();
+    }
+    let createColorRamp=()=>{
+        let colorCanvas=document.createElement('canvas');
+        let colorCtx=colorCanvas.getContext('2d');
+        let gradientColor={
+            0.2:'rgba(0,0,255,0.2)',
+            0.3:'rgba(43,111,231,0.3)',
+            0.4:'rgba(2,192,241,0.4)',
+            0.6:'rgba(44,222,148,0.6)',
+            0.8:'rgba(254,237,83,0.8)',
+            0.9:'rgba(255,118,50,0.9)',
+            1.0:'rgba(255,64,28,1)'
+        };
+        colorCanvas.width=256;
+        colorCanvas.height=1;
+        let gradient=colorCtx.createLinearGradient(0,0,256,1);
+        for(let key in gradientColor){
+            gradient.addColorStop(key,gradientColor[key]);
+        }
+        colorCtx.fillStyle=gradient;
+        colorCtx.fillRect(0,0,256,1);
+        return colorCtx.getImageData(0,0,256,1).data
+    }
+    let toColor=createColorRamp();
+    let img=ctx.getImageData(0,0,canvas.width,canvas.height);
+    let imgData=img.data;
+    for(let i=3;i<imgData.length;i++){
+        let alpha=imgData[i];
+        let offset=alpha * 4;
+        if(offset){
+
+        imgData[i-3]=toColor[offset];
+        imgData[i-2]=toColor[offset+1];
+        imgData[i-1]=toColor[offset+2];
+
+        }
+    }
+    ctx.putImageData(img,0,0,0,0,canvas.width,canvas.height);
+</script>
